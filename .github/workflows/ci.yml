@@ -1,0 +1,38 @@
+# Caminho real no repositório: .github/workflows/ci.yml
+#
+# Hoje este repositório não tem nenhum teste automatizado (o próprio README
+# diz isso na seção 7, de propósito — é um template mínimo). Este workflow
+# não inventa testes que não existem; ele cobre o piso mínimo defensável:
+# as dependências instalam, os dois arquivos Python compilam (pega erro de
+# sintaxe/importação óbvio) e o lint não acusa nada. É pouco — mas é
+# infinitamente mais que zero, e é o suficiente para dar a required_status_checks
+# um contexto real para exigir.
+
+name: CI
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Checar sintaxe (py_compile)
+        run: python -m py_compile agent.py app.py
+
+      - name: Lint (ruff)
+        run: |
+          pip install ruff
+          ruff check agent.py app.py
