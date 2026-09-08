@@ -1,0 +1,48 @@
+# CODEOWNERS
+#
+# Regra de leitura do GitHub: a ÚLTIMA linha que casar com o caminho do
+# arquivo é a que vale — por isso a regra genérica "*" fica primeiro, e as
+# mais específicas depois.
+#
+# AVISO REAL PARA ESTE REPOSITÓRIO (leia antes de ativar "Require review from
+# Code Owners" na proteção de branch):
+#
+# O GitHub NUNCA conta a aprovação do próprio autor do PR como satisfazendo a
+# revisão obrigatória — nem quando o autor é o único CODEOWNER listado. Hoje
+# este repositório tem um único mantenedor (@FabianoCarneiro). Se você ligar
+# "require_code_owner_reviews" exatamente como está agora, NINGUÉM conseguirá
+# mesclar PR nenhum, nem você — porque não existe um segundo dono para aprovar.
+#
+# Para isso funcionar de verdade, escolha uma das opções:
+#   (a) adicione um segundo colaborador/co-instrutor como CODEOWNER; ou
+#   (b) mantenha "enforce_admins: false" na proteção de branch, para que você
+#       (como admin do repositório) possa mesclar mesmo sem uma segunda
+#       aprovação — e a exigência de revisão passa a valer só para qualquer
+#       outro colaborador ou token de agente que não tenha papel de admin.
+#
+# A opção (b) é a que está refletida em branch-protection.json neste pacote,
+# porque modela exatamente o cenário da aula: você (humano, dono) mantém
+# capacidade de decidir; qualquer agente autônomo com um token de escrita
+# (não-admin) fica sujeito ao portão completo.
+
+# Dono padrão — cobre qualquer arquivo que nenhuma regra abaixo capturar.
+*                      @FabianoCarneiro
+
+# Núcleo do agente: toda personalidade (agent-*.md) depende deste código.
+/agent.py              @FabianoCarneiro
+/app.py                @FabianoCarneiro
+
+# Perfis de agente — cada um É o prompt de sistema, não documentação.
+/agent.md              @FabianoCarneiro
+/agent-ada.md          @FabianoCarneiro
+/agent-lint.md         @FabianoCarneiro
+/agent-val.md          @FabianoCarneiro
+
+# Memória injetada no prompt a cada execução — sensível por ir direto ao modelo.
+/memory.md             @FabianoCarneiro
+
+# Dependências do projeto.
+/requirements.txt      @FabianoCarneiro
+
+# Governança do próprio repositório — mudar isso é sensível por definição.
+/.github/              @FabianoCarneiro
