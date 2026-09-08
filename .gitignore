@@ -1,0 +1,16 @@
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+.ruff_cache/
+.venv/
+venv/
+*.egg-info/
+
+# OS
+.DS_Store
