@@ -19,8 +19,8 @@ Rode com:  python agent.py
 import json
 import os
 import sys
-from typing import cast
 from pathlib import Path
+from typing import cast
 
 from dotenv import load_dotenv
 from openai import OpenAI
@@ -132,7 +132,7 @@ def executar_ferramenta(nome: str, argumentos: dict) -> str:
         return json.dumps({"erro": f"Ferramenta '{nome}' não existe."}, ensure_ascii=False)
     try:
         return json.dumps(funcao(**argumentos), ensure_ascii=False)
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001 — ferramenta é código arbitrário; qualquer falha vira erro pro modelo, não crash
         return json.dumps({"erro": f"Falha em '{nome}': {exc}"}, ensure_ascii=False)
 
 
@@ -231,7 +231,7 @@ def main() -> None:
         mensagens.append({"role": "user", "content": entrada})
         try:
             print(f"\nagente> {responder(mensagens, verboso=True)}\n")
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001 — loop do terminal não deve morrer por falha da API
             print(f"\n[erro ao chamar o modelo] {exc}\n")
             mensagens.pop()  # descarta o turno que falhou
 

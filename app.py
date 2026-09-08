@@ -86,6 +86,6 @@ if pergunta:
             resposta = agent.responder(st.session_state.mensagens)
             st.markdown(resposta)
             st.session_state.tela.append(("assistant", resposta))
-        except Exception as erro:
+        except Exception as erro:  # noqa: BLE001 — UI não deve quebrar por falha da API
             del st.session_state.mensagens[marca:]
             st.error(f"Erro ao chamar o modelo: {erro}")
