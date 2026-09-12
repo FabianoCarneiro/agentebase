@@ -69,6 +69,8 @@ agentebase/
 ├── .gitignore
 ├── requirements.txt
 ├── README.md
+├── DEPLOY_AZURE.md    ← guia de deploy no Azure (para alunos)
+└── .github/workflows/deploy-azure.yml  ← deploy automático via GitHub Actions
 ```
 
 | Arquivo | O que é | Você mexe? |
@@ -149,7 +151,15 @@ Para você saber o que falta quando precisar:
 - **Troca de provedor** — está preso à OpenAI; isolar em `chamar_modelo()` é o primeiro passo para mudar isso
 - **Persistência** — nada é salvo entre execuções, exceto o `memory.md`
 - **Testes** — nenhum
-- **Autenticação, logs, custos, deploy** — nada disso
+- **Autenticação, logs, custos** — nada disso
 
 Tudo isso é infraestrutura em volta das ~35 linhas do `responder()`. O loop não
 muda.
+
+---
+
+## 8. Deploy (para alunos testarem)
+
+Cada aluno pode fazer fork deste repositório e ter sua própria instância no
+ar, com deploy automático via GitHub Actions a cada `git push`. Passo a
+passo completo em [`DEPLOY_AZURE.md`](DEPLOY_AZURE.md).
