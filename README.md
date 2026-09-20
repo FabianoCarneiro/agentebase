@@ -9,8 +9,7 @@ Esse projeto tem a finalidade de ser um esqueletobase para nossos agentes de IA 
 ### Passo 1 — baixar o projeto
 
 ```powershell
-git clone https://github.com/IsaiasBritto/aie-cloud.git
-cd aie-cloud\aulas\05-foundry-agents\agentebase
+git clone https://github.com/fabianocarneiro/agentebase.git
 ```
 
 ### Passo 2 — criar o ambiente e instalar dependências
