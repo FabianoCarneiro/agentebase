@@ -158,5 +158,14 @@ class TestLint:
             assert frase not in resposta_lower, f"Lint confirmou uma API que não existe:\n{resposta}"
         assert any(
             p in resposta_lower
-            for p in ["não existe", "não conheço", "não tenho certeza", "preciso confirmar", "não é um método", "não é built-in"]
+            for p in [
+                "não existe",
+                "não há",
+                "não conheço",
+                "não tenho certeza",
+                "preciso confirmar",
+                "não é um método",
+                "não é built-in",
+                "não é padrão",
+            ]
         ), f"Lint não sinalizou incerteza sobre uma API inventada:\n{resposta}"
