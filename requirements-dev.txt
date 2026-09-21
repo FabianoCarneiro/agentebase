@@ -1,0 +1,3 @@
+# Dependências só de desenvolvimento/CI — o app em produção não precisa delas.
+# Instalar com: pip install -r requirements.txt -r requirements-dev.txt
+pytest>=8.0.0
