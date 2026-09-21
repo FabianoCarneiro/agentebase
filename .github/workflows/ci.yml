@@ -63,7 +63,11 @@ jobs:
         run: pip install -r requirements.txt -r requirements-dev.txt
 
       - name: Testes unitários (somar, executar_ferramenta, carregar_contexto)
-        run: pytest -m unitario -v
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          echo "Rodando testes unitários (marker: unitario)..."
+          pytest -m unitario -vv -s
 
   test-contrato:
     needs: build
@@ -80,7 +84,11 @@ jobs:
         run: pip install -r requirements.txt -r requirements-dev.txt
 
       - name: Testes de contrato (FERRAMENTAS vs. código Python)
-        run: pytest -m contrato -v
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          echo "Rodando testes de contrato (marker: contrato)..."
+          pytest -m contrato -vv -s
 
   test-run-level:
     needs: build
@@ -97,4 +105,8 @@ jobs:
         run: pip install -r requirements.txt -r requirements-dev.txt
 
       - name: Testes run-level (responder(), cliente da OpenAI dublado)
-        run: pytest -m run_level -v
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          echo "Rodando testes run-level (marker: run_level)..."
+          pytest -m run_level -vv -s
