@@ -1,11 +1,16 @@
 # Caminho real no repositório: .github/workflows/ci.yml
 #
-# Além do piso mínimo original (dependências instalam, os dois arquivos
-# Python compilam, o lint não acusa nada), este workflow agora roda a suíte
-# de testes em tests/: unitários (somar, executar_ferramenta,
-# carregar_contexto), de contrato (FERRAMENTAS bate com o código) e run-level
-# (responder() completo, com o cliente da OpenAI trocado por um dublê — sem
-# gastar chamada real).
+# O job `build` cobre o piso mínimo: dependências instalam, os dois arquivos
+# Python compilam, o lint não acusa nada. A suíte de testes em tests/ roda
+# em três jobs separados, um por camada da pirâmide de testes:
+#
+#   - test-unit       → somar, executar_ferramenta, carregar_contexto
+#   - test-contrato   → FERRAMENTAS bate com o código Python de verdade
+#   - test-run-level  → responder() completo, com o cliente da OpenAI
+#                        trocado por um dublê (sem gastar chamada real)
+#
+# Os três dependem de `build` (só rodam se o piso mínimo passar) e aparecem
+# como checks independentes na UI do GitHub.
 #
 # O que NÃO roda aqui: tests/test_smoke.py, marcado `smoke`, que chama a API
 # de verdade. Ele custa dinheiro e não é 100% determinístico — não pertence
@@ -29,6 +34,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: pip
 
       - name: Instalar dependências
         run: pip install -r requirements.txt -r requirements-dev.txt
@@ -41,5 +47,53 @@ jobs:
           pip install ruff
           ruff check agent.py app.py
 
-      - name: Testes (unitários + contrato + run-level, sem API real)
-        run: pytest -m "not smoke" -v
+  test-unit:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Testes unitários (somar, executar_ferramenta, carregar_contexto)
+        run: pytest -m unitario -v
+
+  test-contrato:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Testes de contrato (FERRAMENTAS vs. código Python)
+        run: pytest -m contrato -v
+
+  test-run-level:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Testes run-level (responder(), cliente da OpenAI dublado)
+        run: pytest -m run_level -v

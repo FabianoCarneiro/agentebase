@@ -25,6 +25,8 @@ import inspect
 import json
 from types import SimpleNamespace
 
+import pytest
+
 import agent
 
 # ==========================================================================
@@ -84,6 +86,7 @@ def _fake_cliente(respostas):
 # ==========================================================================
 
 
+@pytest.mark.unitario
 class TestSomar:
     def test_soma_inteiros(self):
         assert agent.somar(2, 3) == {"resultado": 5}
@@ -103,6 +106,7 @@ class TestSomar:
 # ==========================================================================
 
 
+@pytest.mark.unitario
 class TestExecutarFerramenta:
     def test_ferramenta_existente(self):
         resultado = agent.executar_ferramenta("somar", {"a": 4, "b": 6})
@@ -135,6 +139,7 @@ class TestExecutarFerramenta:
 # ==========================================================================
 
 
+@pytest.mark.unitario
 class TestCarregarContexto:
     def test_concatena_agent_md_e_memory_md(self, tmp_path, monkeypatch):
         agent_md = tmp_path / "agent.md"
@@ -163,6 +168,7 @@ class TestCarregarContexto:
 # ==========================================================================
 
 
+@pytest.mark.contrato
 class TestContratoDasFerramentas:
     """Garante que a 'metade JSON' (o que o modelo lê) e a 'metade Python'
     (o que roda de verdade) não descolaram uma da outra. Não pega description
@@ -205,6 +211,7 @@ class TestContratoDasFerramentas:
 # ==========================================================================
 
 
+@pytest.mark.run_level
 class TestResponderRunLevel:
     def test_resposta_direta_em_texto_nao_chama_ferramenta(self, monkeypatch):
         resposta = _fake_response(_fake_message(content="Oi! Tudo bem?"))
