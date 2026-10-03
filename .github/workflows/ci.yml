@@ -70,7 +70,7 @@ jobs:
           pytest -m unitario -vv -s
 
   test-contrato:
-    needs: build
+    needs: test-unit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -89,9 +89,30 @@ jobs:
         run: |
           echo "Rodando testes de contrato (marker: contrato)..."
           pytest -m contrato -vv -s
+  
+  test-smoke:
+    needs: test-contrato
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Instalar dependências
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Testes de contrato (FERRAMENTAS vs. código Python)
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          echo "Rodando testes de contrato (marker: contrato)..."
+          pytest -m smoke -vv -s
 
   test-run-level:
-    needs: build
+    needs: test-smoke
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -112,7 +133,7 @@ jobs:
           pytest -m run_level -vv -s
           
   test-eval:
-    needs: build
+    needs: test-run-level
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
