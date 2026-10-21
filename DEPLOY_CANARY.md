@@ -9,7 +9,7 @@ chega a todos se continuar saudável. Tudo no plano **Free F1** — sem custo.
 
 ## Como funciona
 
-São três Web Apps no mesmo plano:
+São três Web Apps, **cada um no seu próprio plano F1**:
 
 | App | Papel |
 |---|---|
@@ -39,11 +39,18 @@ O estável não foi tocado, então todo mundo volta para a versão anterior.
 ## Passo 1 — Criar os dois apps novos
 
 Com o [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli)
-logado (`az login`), troque `<rg>` e `<plano>` pelos do seu app atual:
+logado (`az login`), troque `<rg>` pelo resource group e `<regiao>` pela
+região do seu app atual (ex.: `westus3`).
+
+Cada app precisa de um plano **próprio**: um plano F1 Linux só mantém um
+app no ar — os outros ficam com `403 Site Disabled`, como se a cota tivesse
+estourado.
 
 ```bash
-az webapp create -g <rg> -p <plano> -n <seu-app>-canary --runtime "PYTHON:3.11"
-az webapp create -g <rg> -p <plano> -n <seu-app>-router --runtime "PYTHON:3.11"
+for papel in canary router; do
+  az appservice plan create -g <rg> -n asp-<seu-app>-$papel --is-linux --sku F1 -l <regiao>
+  az webapp create -g <rg> -p asp-<seu-app>-$papel -n <seu-app>-$papel --runtime "PYTHON:3.11"
+done
 ```
 
 ## Passo 2 — Configurar os apps
@@ -131,4 +138,5 @@ done | sort | uniq -c
 | O health check só confirma que o Streamlit subiu | `/_stcore/health` não chama a OpenAI. A lógica do agente é coberta antes, pelos testes |
 | Alguns segundos fora do ar no roteador a cada passo | Mudar o percentual = republicar o roteador, que reinicia |
 | Se a promoção para o estável falhar no meio, o estável pode ficar quebrado | O rollback só zera o roteador; nesse caso, rode o workflow de novo com o commit anterior |
+| `403 Site Disabled` em um dos apps | Dois apps no mesmo plano F1 — veja o passo 1 |
 | O primeiro acesso a cada app pode levar ~1 min | O F1 dorme sem tráfego. O health check espera até 3 min por isso |
