@@ -1,0 +1,7 @@
+{
+  "pct": 0,
+  "urls": {
+    "estavel": "https://agentebase-hme9cubwf9e0hncn.westus3-01.azurewebsites.net",
+    "canary": "https://agentebase-canary.azurewebsites.net"
+  }
+}
