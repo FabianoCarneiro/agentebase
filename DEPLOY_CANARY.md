@@ -134,6 +134,7 @@ done | sort | uniq -c
 | O primeiro acesso a cada app pode levar ~1 min | O F1 dorme sem tráfego. O health check espera até 3 min por isso |
 
 ## Teste de tráfego no canary
+```shell
 URL=https://agentebase-router.azurewebsites.net
 estavel=0; canary=0
 for i in $(seq 50); do
