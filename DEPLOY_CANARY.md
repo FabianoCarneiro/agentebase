@@ -132,3 +132,17 @@ done | sort | uniq -c
 | Alguns segundos fora do ar no roteador a cada passo | Mudar o percentual = republicar o roteador, que reinicia |
 | Se a promoção para o estável falhar no meio, o estável pode ficar quebrado | O rollback só zera o roteador; nesse caso, rode o workflow de novo com o commit anterior |
 | O primeiro acesso a cada app pode levar ~1 min | O F1 dorme sem tráfego. O health check espera até 3 min por isso |
+
+## Teste de tráfego no canary
+URL=https://agentebase-router.azurewebsites.net
+estavel=0; canary=0
+for i in $(seq 50); do
+  destino=$(curl -s -o /dev/null -w "%{redirect_url}" "$URL")
+  if [[ $destino == *agentebase-canary* ]]; then
+    canary=$((canary+1)); nome="CANARY "
+  else
+    estavel=$((estavel+1)); nome="estável"
+  fi
+  printf "%2d  %s   (estável: %d | canary: %d)\n" "$i" "$nome" "$estavel" "$canary"
+done
+
