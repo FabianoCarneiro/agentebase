@@ -17,6 +17,8 @@ on:
 
 jobs:
   deploy:
+    # Com DEPLOY_ESTRATEGIA=canary quem publica é o deploy-canary.yml.
+    if: vars.DEPLOY_ESTRATEGIA != 'canary'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
