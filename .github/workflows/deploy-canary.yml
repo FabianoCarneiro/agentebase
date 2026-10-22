@@ -32,7 +32,7 @@ jobs:
       ROUTER_URL: ${{ vars.ROUTER_URL }}
       ROUTER_PUBLISH_PROFILE: ${{ secrets.AZURE_ROUTER_PUBLISH_PROFILE }}
       CANARY_PASSOS: ${{ vars.CANARY_PASSOS || '10 50' }}
-      CANARY_ESPERA_MIN: ${{ vars.CANARY_ESPERA_MIN || '5' }}
+      CANARY_ESPERA_MIN: ${{ vars.CANARY_ESPERA_MIN || '3' }}
     steps:
       - uses: actions/checkout@v4
 
