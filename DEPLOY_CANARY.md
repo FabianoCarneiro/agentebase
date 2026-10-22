@@ -36,6 +36,22 @@ O estável não foi tocado, então todo mundo volta para a versão anterior.
 > Os slots nativos do Azure fazem isso sem roteador próprio, mas exigem plano
 > Standard (pago). Este é o equivalente gratuito.
 
+## Arquivos necessários
+
+O workflow procura os arquivos nestes caminhos exatos — se estiverem em outra
+pasta, o deploy falha:
+
+```
+.github/
+  scripts/
+    canary.sh        ← saúde, observação e publicação do roteador
+  workflows/
+    deploy-canary.yml
+router/
+  config.json        ← URLs do estável/canary e o percentual (pct)
+  router.py          ← o roteador
+```
+
 ## Passo 1 — Criar os dois apps novos
 
 Com o [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli)
