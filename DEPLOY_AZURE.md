@@ -47,9 +47,25 @@ python -m streamlit run app.py --server.port 8000 --server.address 0.0.0.0
 
 Sem isso o Azure não sabe como iniciar um app Streamlit.
 
-## Passo 5 — Baixar o Publish Profile
+## Passo 5 — Habilitar a autenticação básica e baixar o Publish Profile
 
-Na página **Overview** do Web App, clique em **Download publish profile**.
+Apps novos vêm com a autenticação básica **desligada**. Sem ela, o botão de
+download do publish profile fica desabilitado e o deploy falha com erro 401.
+
+Em **Configuration → General settings**, ligue (**On**):
+
+- **SCM Basic Auth Publishing Credentials**
+- **FTP Basic Auth Publishing Credentials**
+
+Clique em **Save**. Ou, pelo Azure CLI:
+
+```bash
+az resource update -g <rg> --namespace Microsoft.Web \
+  --resource-type basicPublishingCredentialsPolicies \
+  --parent sites/<nome-do-seu-app> -n scm --set properties.allow=true
+```
+
+Depois, na página **Overview** do Web App, clique em **Download publish profile**.
 Guarde o arquivo — você vai colar o conteúdo dele no próximo passo.
 
 ## Passo 6 — Configurar secrets no seu fork
@@ -82,6 +98,7 @@ https://<nome-do-seu-app>.azurewebsites.net
 | Tela em branco / erro genérico do Azure | Faltou configurar o Startup Command (passo 4) |
 | `OPENAI_API_KEY não encontrada` na tela do app | Faltou o Application Setting `OPENAI_API_KEY` (passo 3), ou o nome está escrito errado |
 | Deploy "pulado" com aviso nos logs da Action | Secrets `AZURE_WEBAPP_NAME`/`AZURE_WEBAPP_PUBLISH_PROFILE` não configurados no seu fork (passo 6) |
+| Deploy falha com `401 Unauthorized` na Action, ou o botão *Download publish profile* está desabilitado | Autenticação básica desligada no Web App (passo 5) |
 | Build falha nos logs do Azure, pacotes não encontrados | Faltou `SCM_DO_BUILD_DURING_DEPLOYMENT=true` (passo 3) |
 | Erro 401 dentro do app | Chave da OpenAI inválida ou expirada |
 | Erro 429 dentro do app | Limite de cota da sua conta OpenAI — normal em uso intenso de aula |
