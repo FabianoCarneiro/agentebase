@@ -33,7 +33,7 @@
 /app.py                @FabianoCarneiro
 
 # Perfis de agente — cada um É o prompt de sistema, não documentação.
-/agent.md              @FabianoCarneiro
+/agent.md              @FabianoCarneiro @FABIANO-DA-SILVA-CARNEIRO 
 /agent-ada.md          @FabianoCarneiro
 /agent-lint.md         @FabianoCarneiro
 /agent-val.md          @FabianoCarneiro
