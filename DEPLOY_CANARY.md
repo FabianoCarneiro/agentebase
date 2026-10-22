@@ -9,7 +9,7 @@ chega a todos se continuar saudável. Tudo no plano **Free F1** — sem custo.
 
 ## Como funciona
 
-São três Web Apps no mesmo plano:
+São três Web Apps, **cada um no seu próprio plano F1** (veja o Passo 1):
 
 | App | Papel |
 |---|---|
@@ -54,12 +54,28 @@ router/
 
 ## Passo 1 — Criar os dois apps novos
 
+> **Um service plan para cada web app.** O plano Free F1 só mantém **um** web
+> app no ar. Se o canary e o roteador ficarem no mesmo plano do estável, eles
+> respondem `403 Site Disabled`. Por isso cada app novo ganha o seu próprio
+> plano F1 (continua sem custo).
+
 Com o [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli)
-logado (`az login`), troque `<rg>` e `<plano>` pelos do seu app atual:
+logado (`az login`), troque `<rg>` pelo resource group do seu app atual e
+`<regiao>` pela região dele:
 
 ```bash
-az webapp create -g <rg> -p <plano> -n <seu-app>-canary --runtime "PYTHON:3.11"
-az webapp create -g <rg> -p <plano> -n <seu-app>-router --runtime "PYTHON:3.11"
+az appservice plan create -g <rg> -n <seu-app>-canary-plan --sku F1 --is-linux -l <regiao>
+az appservice plan create -g <rg> -n <seu-app>-router-plan --sku F1 --is-linux -l <regiao>
+
+az webapp create -g <rg> -p <seu-app>-canary-plan -n <seu-app>-canary --runtime "PYTHON:3.11"
+az webapp create -g <rg> -p <seu-app>-router-plan -n <seu-app>-router --runtime "PYTHON:3.11"
+```
+
+Se você já criou os apps no mesmo plano, mova cada um para o plano próprio:
+
+```bash
+az webapp update -g <rg> -n <seu-app>-canary \
+  --set serverFarmId=$(az appservice plan show -g <rg> -n <seu-app>-canary-plan --query id -o tsv)
 ```
 
 ## Passo 2 — Configurar os apps
